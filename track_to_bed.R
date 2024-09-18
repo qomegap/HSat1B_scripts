@@ -3,7 +3,6 @@
 library(dplyr, warn.conflicts = FALSE)
 library(tidyr)
 library(stringr)
-library(argparse)
 
 #Args
 args = commandArgs(trailingOnly=TRUE)
@@ -12,8 +11,8 @@ if(length(args) < 3)
   stop("Not enough arguments. Please supply 3 arguments.
        Usage: Rstudio track_to_bed inp.bed outm.bed outp.bed
        -inp Input bed from BigBED file
-       -outm Output mat bed file
-       -outp Output pat bed file")
+       -outm Output hap1/mat bed file
+       -outp Output hap2/pat bed file")
 }
 inp <- args[1]
 outm <- args[2]
@@ -41,12 +40,16 @@ if (!any(df=="HSat1B"))
 df <- df %>%
   filter(str_detect(name, "HSat1B"))
 
-df_m <- df[df$mp == 'mat',]
-df_m <- df_m[,-2]
-df_p <- df[df$mp == 'pat',]
-df_p <- df_p[,-2]
+#Convert mat/pat to hap1/hap2
+df$mp[df$mp == 'mat'] = 'hap1'
+df$mp[df$mp == 'pat'] = 'hap2'
+
+df_1 <- df[df$mp == 'hap1',]
+df_1 <- df_m[,-2]
+df_2 <- df[df$mp == 'hap2',]
+df_2 <- df_p[,-2]
 
 #Save
 print("Saving!!")
-write.table(df_m, outm, sep="\t", col.names=FALSE, row.names = FALSE, append = TRUE, quote = FALSE) 
-write.table(df_p, outp, sep="\t", col.names=FALSE, row.names = FALSE, append = TRUE, quote = FALSE) 
+write.table(df_1, outm, sep="\t", col.names=FALSE, row.names = FALSE, append = TRUE, quote = FALSE) 
+write.table(df_2, outp, sep="\t", col.names=FALSE, row.names = FALSE, append = TRUE, quote = FALSE) 
