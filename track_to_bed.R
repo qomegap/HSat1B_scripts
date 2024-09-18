@@ -45,9 +45,9 @@ df$mp[df$mp == 'mat'] = 'hap1'
 df$mp[df$mp == 'pat'] = 'hap2'
 
 df_1 <- df[df$mp == 'hap1',]
-df_1 <- df_m[,-2]
+df_1 <- df_1[,-2]
 df_2 <- df[df$mp == 'hap2',]
-df_2 <- df_p[,-2]
+df_2 <- df_2[,-2]
 
 #Save
 print("Saving!!")
